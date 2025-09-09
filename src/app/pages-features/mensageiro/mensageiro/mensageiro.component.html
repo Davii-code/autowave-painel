@@ -1,0 +1,47 @@
+<div class="container">
+  <mat-card class="card" appearance="outlined">
+    <div class="title-text">
+      <p>{{ getTittleCard() }}</p>
+    </div>
+
+    <div class="icon">
+      <img mat-card-image [src]="getImage()" width="200" height="200" alt="">
+    </div>
+
+    <mat-card-content class="container-button">
+      <button mat-button mat-flat-button class="big-button" [ngStyle]="getButtonStyle()" (click)="handleButtonClick()" [disabled]="!haveInstance">{{ getButtonLabel() }}</button>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="card" appearance="outlined">
+    <div class="title-text">
+      <p>Digite a mensagem que deseja enviar</p>
+    </div>
+
+    <div class="editor mat-elevation-z2">
+      <mat-toolbar class="toolbar mat-elevation-z2">
+        <button mat-icon-button (click)="formatText('bold')" matTooltip="Negrito (*texto*)" [disabled]="!(haveInstance && status === 'open')">
+          <mat-icon>format_bold</mat-icon>
+        </button>
+        <button mat-icon-button (click)="formatText('italic')" matTooltip="Itálico (_texto_)" [disabled]="!(haveInstance && status === 'open')">
+          <mat-icon>format_italic</mat-icon>
+        </button>
+      </mat-toolbar>
+      <textarea matInput id="editor" [(ngModel)]="text" rows="5" placeholder="Digite seu texto aqui..." class="editor-input" [disabled]="!(haveInstance && status === 'open')"></textarea>
+    </div>
+
+    <mat-card-content class="container-button"></mat-card-content>
+  </mat-card>
+
+  <mat-card class="card" appearance="outlined">
+    <mat-card-title class="title-text">
+      <p>Selecione os clientes para enviar mensagem</p>
+    </mat-card-title>
+    <app-paciente-select class="select-pacient" (selectedPacientesChange)="onSelectedPacientesChange($event)" [disabled]="!(haveInstance && status === 'open')"></app-paciente-select>
+    <mat-card-content class="container-button">
+      <div class="container-button-end">
+        <button mat-button mat-flat-button class="medium-button" (click)="enviar()" [disabled]="!(haveInstance && status === 'open')"> Enviar </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

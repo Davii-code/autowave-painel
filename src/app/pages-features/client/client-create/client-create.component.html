@@ -1,0 +1,57 @@
+<!-- src/app/client/ui/client-create.component.html -->
+<mat-card class="card">
+  <div class="card-header">
+    <div class="title">
+      <mat-icon>person_add</mat-icon>
+      <h2>Novo Cliente</h2>
+    </div>
+    <div class="actions">
+      <button mat-stroked-button color="primary" (click)="cancel()">
+        <mat-icon>arrow_back</mat-icon>
+        Voltar
+      </button>
+    </div>
+  </div>
+
+  <mat-progress-bar *ngIf="saving()" mode="indeterminate"></mat-progress-bar>
+
+  <form class="form" (ngSubmit)="submit()" [formGroup]="form" autocomplete="off" novalidate>
+    <div class="grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name" placeholder="Ex.: Maria Silva" />
+        <mat-error *ngIf="hasError('name','required')">Nome é obrigatório.</mat-error>
+        <mat-error *ngIf="hasError('name','minlength')">Mínimo de 2 caracteres.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" placeholder="email@dominio.com" />
+        <mat-error *ngIf="hasError('email','required')">Email é obrigatório.</mat-error>
+        <mat-error *ngIf="hasError('email','email')">Formato de email inválido.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Telefone</mat-label>
+        <input matInput formControlName="phone" placeholder="(11) 90000-0000" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Documento</mat-label>
+        <input matInput formControlName="document" placeholder="CPF/CNPJ" />
+      </mat-form-field>
+
+      <div class="toggle">
+        <mat-slide-toggle color="primary" formControlName="active">Ativo</mat-slide-toggle>
+      </div>
+    </div>
+
+    <div class="footer">
+      <button type="button" mat-button (click)="cancel()">Cancelar</button>
+      <button type="submit" mat-flat-button color="primary" [disabled]="form.invalid || saving()">
+        <mat-icon>check</mat-icon>
+        Salvar
+      </button>
+    </div>
+  </form>
+</mat-card>

@@ -1,0 +1,48 @@
+/* src/app/client/ui/client-edit.dialog.css */
+.dialog-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 12px 8px 8px;
+  border-bottom: 1px solid rgba(0,0,0,.06);
+}
+.dialog-title .title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.content { padding: 8px 8px 0; }
+.form { padding: 8px 0 0; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px 20px;
+  align-items: start;
+}
+mat-form-field { width: 100%; }
+
+.col-6 { grid-column: span 6; }
+.col-12 { grid-column: span 12; }
+
+.toggle {
+  display: flex;
+  align-items: center;
+  padding-top: 4px;
+}
+
+.footer {
+  padding: 12px 8px;
+  border-top: 1px solid rgba(0,0,0,.06);
+  gap: 8px;
+}
+
+@media (max-width: 900px) {
+  .col-6 { grid-column: span 12; }
+}

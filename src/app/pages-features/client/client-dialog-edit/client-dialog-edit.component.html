@@ -1,0 +1,61 @@
+<h2 mat-dialog-title class="dialog-title">
+  <span class="title">
+    <mat-icon>edit</mat-icon>
+    Editar Cliente
+  </span>
+  <button mat-icon-button mat-dialog-close aria-label="Fechar">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+
+<mat-progress-bar *ngIf="loading() || saving()" mode="indeterminate"></mat-progress-bar>
+
+<mat-dialog-content class="content">
+  <form id="clientEditForm" class="form" (ngSubmit)="submit()" [formGroup]="form" autocomplete="off" novalidate>
+    <div class="grid">
+      <mat-form-field appearance="outline" class="col-6">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name" cdkFocusInitial placeholder="Ex.: Maria Silva" />
+        <mat-error *ngIf="hasError('name','required')">Nome é obrigatório.</mat-error>
+        <mat-error *ngIf="hasError('name','minlength')">Mínimo de 2 caracteres.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-6">
+        <mat-label>Telefone</mat-label>
+        <input
+          matInput
+          formControlName="telephone"
+          inputmode="numeric"
+          autocomplete="tel"
+          maxlength="11"
+          (input)="digitsOnly('telephone')"
+          placeholder="Ex.: 62998765432" />
+        <mat-error *ngIf="hasError('telephone','required')">Telefone é obrigatório.</mat-error>
+        <mat-error *ngIf="hasError('telephone','pattern')">Formato de telefone inválido.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-6">
+        <mat-label>Data de nascimento</mat-label>
+        <input matInput type="date" formControlName="dateofbirth" />
+        <mat-error *ngIf="hasError('dateofbirth','required')">Data de nascimento é obrigatória.</mat-error>
+      </mat-form-field>
+
+      <!-- Última Compra (opcional) -->
+      <mat-form-field appearance="outline" class="col-6">
+        <mat-label>Última compra</mat-label>
+        <input matInput type="date" formControlName="lastPurchase" />
+        <mat-error *ngIf="hasError('lastPurchase','required')">Data da última venda  é obrigatória.</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="footer">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-flat-button color="primary"
+          [disabled]="form.invalid || saving() || loading()"
+          form="clientEditForm">
+    <mat-icon>check</mat-icon>
+    Salvar
+  </button>
+</mat-dialog-actions>

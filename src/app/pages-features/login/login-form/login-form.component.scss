@@ -1,0 +1,65 @@
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #9DA7B2;
+}
+
+.example-card {
+  display: flex;
+  padding: 20px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  max-width: 560px;
+}
+
+.line {
+  width: 480px;
+  height: 1px;
+  background: #9DA7B2;
+}
+
+.card-title {
+  color: var(--Cinza, #9DA7B2);
+  text-align: center;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.card-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+
+  mat-error {
+    margin-left: -15px;
+    margin-top: -20px;
+  }
+}
+
+.form-login{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.example-card-footer {
+  padding: 16px;
+}

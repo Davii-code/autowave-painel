@@ -1,0 +1,45 @@
+:host {
+  --sidenav-bg: #0f172a;                 /* mesmo fundo do sidenav */
+  --sidenav-fg: #fff;                    /* texto branco */
+  --outline: rgba(148,163,184,.25);      /* mesma borda usada no sidenav */
+}
+
+/* Toolbar com o mesmo visual do sidenav */
+mat-toolbar {
+  /* tokens do Angular Material + fallback direto */
+  --mat-toolbar-container-background-color: var(--sidenav-bg);
+  --mat-toolbar-container-text-color: var(--sidenav-fg);
+  background: var(--sidenav-bg);
+  color: var(--sidenav-fg);
+
+  border-bottom: 1px solid var(--outline);
+  transition: margin-left .3s ease;  /* anima com o colapso do sidenav */
+  position: relative;
+  z-index: 5;
+
+  /* >>> Alinhamento e espaçamento */
+  display: flex;
+  align-items: center;
+  padding-right: 8px;
+}
+
+/* garante ícone e botão brancos */
+mat-toolbar mat-icon,
+mat-toolbar button[mat-icon-button] {
+  color: #fff;
+}
+
+/* >>> Empurra o segundo botão (logout) para a direita
+   (último mat-icon-button dentro da toolbar) */
+mat-toolbar button[mat-icon-button]:last-of-type {
+  margin-left: auto;
+}
+
+/* mantém seu layout atual */
+.mat-sidenav-content {
+  transition: margin-left 0.3s;
+  padding: 16px;
+}
+mat-sidenav-container {
+  height: calc(100vh - 64px);
+}
