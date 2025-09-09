@@ -1,0 +1,60 @@
+/* Shell do sidenav */
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #0f172a;
+  color: #fff;                                 /* <-- texto branco */
+  border-right: 1px solid rgba(148,163,184,.25);
+
+  /* Força o branco nos itens do Angular Material List */
+  --mdc-list-list-item-label-text-color: #fff;
+  --mdc-list-list-item-supporting-text-color: rgba(255,255,255,.9);
+  --mdc-list-list-item-trailing-supporting-text-color: rgba(255,255,255,.8);
+  --mdc-list-list-item-disabled-label-text-color: rgba(255,255,255,.5);
+}
+
+/* Header */
+.sidenav-header {
+  overflow: hidden;
+  padding: 12px 10px;
+  text-align: center;
+  border-bottom: 1px solid rgba(148,163,184,.15);
+}
+.sidenav-header > img {
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+.sidenav-header .header-text > h2,
+.sidenav-header .header-text > p {
+  color: inherit; /* herda o branco */
+}
+
+/* Itens do menu */
+:host a[mat-list-item] {
+  color: #fff;                  /* garante branco também no <a> */
+  border-radius: 10px;
+  margin: 2px 0;
+}
+:host a[mat-list-item].active-link {
+  background: #227ded;
+}
+
+/* Ícones: mantenho a cor de acento;
+   se quiser ícone branco também, troque por color:#fff */
+:host mat-icon[matListItemIcon] {
+  color: #60a5fa;
+}
+
+/* Colapsado */
+.hide-header-text {
+  opacity: 0;
+  height: 0;
+  pointer-events: none;
+  transition: opacity .2s ease, height .2s ease;
+}
+
+span{
+  color: #FFFFFF;
+}

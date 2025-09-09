@@ -11,7 +11,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import {ClientService} from '../client-service/client.service';
-import {Client} from '../../../models/Client';
+import {
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle
+} from '@angular/material/dialog';
+import {SecurityService} from '../../../authentication/security/security.service';
+import {UserSecond} from '../../../models/UserSecond';
+import {ClientCreateRequest} from '../../../models/ClientCreateRequest';
 
 
 @Component({
@@ -21,7 +30,7 @@ import {Client} from '../../../models/Client';
     CommonModule, ReactiveFormsModule, RouterModule,
     MatCardModule, MatFormFieldModule, MatInputModule,
     MatSlideToggleModule, MatButtonModule, MatIconModule,
-    MatProgressBarModule, MatSnackBarModule
+    MatProgressBarModule, MatSnackBarModule, MatDialogActions, MatDialogTitle, MatDialogClose, MatDialogContent
   ],
   templateUrl: './client-create.component.html',
   styleUrl: './client-create.component.css',
@@ -29,47 +38,73 @@ import {Client} from '../../../models/Client';
 })
 export class ClientCreateComponent {
   private fb = inject(FormBuilder);
-  private router = inject(Router);
+  private dialogRef = inject(MatDialogRef<ClientCreateComponent>);
   private service = inject(ClientService);
-  private snack = inject(MatSnackBar);
+  private _securityService = inject(SecurityService);
+
 
   saving = signal(false);
+  private readonly credUser = this._securityService.credential.user;
 
-  form = this.fb.group({
+  form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
-    email: ['', [Validators.required, Validators.email]],
-    phone: [''],
-    document: [''],
-    active: [true]
+    telephone: ['', [
+      Validators.required,
+      Validators.pattern(/^\d{10,11}$/) // só números, 10 ou 11 dígitos
+    ]],
+    dateofbirth: ['', [Validators.required]],
+    lastPurchase: ['', [Validators.required]],
+    user: this.fb.nonNullable.control<UserSecond>({
+      id: this.credUser?.id,
+      name: this.credUser?.name,
+      login: this.credUser?.login
+    })
   });
 
-  submit() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    this.saving.set(true);
-
-    const payload = this.form.getRawValue() as Partial<Client>;
-    this.service.create(payload).subscribe({
-      next: (created) => {
-        this.snack.open('Cliente criado com sucesso!', 'OK', { duration: 2500 });
-        this.router.navigate(['/client']); // volta para a lista
-      },
-      error: (err) => {
-        const msg = (err?.message || 'Erro ao criar cliente');
-        this.snack.open(msg, 'Fechar', { duration: 3500 });
-        this.saving.set(false);
-      }
-    });
-  }
-
-  cancel() {
-    this.router.navigate(['/client']);
+  close() {
+    this.dialogRef.close();
   }
 
   hasError(control: keyof typeof this.form.controls, error: string) {
     const c = this.form.controls[control];
     return c.touched && c.hasError(error);
   }
+
+  submit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.saving.set(true);
+
+    const raw = this.form.getRawValue(); // inclui 'user' mesmo desabilitado
+
+    const payload: ClientCreateRequest = {
+      name: raw.name.trim(),
+      telephone: (raw.telephone || '').replace(/\D/g, ''), // só dígitos
+      dateofbirth: raw.dateofbirth,
+      lastPurchase: raw.lastPurchase ?raw.lastPurchase : undefined,
+      user: raw.user
+    };
+
+    this.service.create(payload).subscribe({
+      next: (created) => {
+        this.dialogRef.close({ created: true, client: created });
+      },
+      error: (err) => {
+        this.saving.set(false);
+        alert(err?.message || 'Erro ao criar cliente');
+      }
+    });
+  }
+
+  digitsOnly(ctrl: 'telephone') {
+    const v = this.form.controls[ctrl].value ?? '';
+    const only = v.replace(/\D/g, '');
+    if (v !== only) {
+      this.form.controls[ctrl].setValue(only, { emitEvent: false });
+    }
+  }
+
 }

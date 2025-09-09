@@ -21,7 +21,6 @@ import {MatDialog} from '@angular/material/dialog';
     MatCardContent,
     ReactiveFormsModule,
     MatCardHeader,
-    NgOptimizedImage,
     MatCardTitle,
     MatFormField,
     MatFormFieldModule,
@@ -38,6 +37,7 @@ import {MatDialog} from '@angular/material/dialog';
     [provideNativeDateAdapter()],
   ],
   templateUrl: './login-form.component.html',
+  standalone: true,
   styleUrl: './login-form.component.scss'
 })
 export class LoginFormComponent implements OnInit{
@@ -60,7 +60,7 @@ export class LoginFormComponent implements OnInit{
     if (this.loginForm.valid) {
       this._service.login(this.loginForm.value).subscribe((credential: CredentialDTO) => {
         this._securityService.init(credential);
-        this._router.navigate(['/pacienteList']);
+        this._router.navigate(['/campaing']);
       });
     }
   }

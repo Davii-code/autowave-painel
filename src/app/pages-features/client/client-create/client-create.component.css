@@ -1,60 +1,58 @@
-.card {
-  border: 1px solid rgba(0,0,0,.06);
-  border-radius: 12px;
-  overflow: hidden;
-}
+/* src/app/client/ui/client-create.dialog.css */
 
-.card-header {
-  padding: 12px 16px;
+/* Título com ícone e botão fechar */
+.dialog-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(0,0,0,.06);
   gap: 12px;
+  margin: 0;
+  padding: 12px 8px 8px;
+  border-bottom: 1px solid rgba(0,0,0,.06);
 }
-
-.card-header .title {
+.dialog-title .title {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-.card-header .title h2 {
-  margin: 0;
   font-size: 1.125rem;
   font-weight: 600;
+  margin: 0;
 }
 
-.form {
-  padding: 16px;
+/* Área de conteúdo do dialog */
+.content {
+  padding: 8px 8px 0;
 }
+
+/* Form + Grid de 12 colunas */
+.form { padding: 8px 0 0; }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px 20px; /* row / col */
+  align-items: start;
 }
 
 mat-form-field { width: 100%; }
 
-mat-form-field:nth-child(1) { grid-column: span 6; }
-mat-form-field:nth-child(2) { grid-column: span 6; }
-mat-form-field:nth-child(3) { grid-column: span 6; }
-mat-form-field:nth-child(4) { grid-column: span 6; }
-.toggle { grid-column: span 12; display: flex; align-items: center; padding-top: 6px; }
+.col-6 { grid-column: span 6; }
+.col-12 { grid-column: span 12; }
 
-.footer {
-  margin-top: 8px;
-  padding: 8px 0 4px;
+.toggle {
   display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-  border-top: 1px solid rgba(0,0,0,.06);
+  align-items: center;
+  padding-top: 4px;
 }
 
-/* responsivo */
-@media (max-width: 768px) {
-  mat-form-field:nth-child(1),
-  mat-form-field:nth-child(2),
-  mat-form-field:nth-child(3),
-  mat-form-field:nth-child(4) { grid-column: span 12; }
+/* Actions */
+.footer {
+  padding: 12px 8px;
+  border-top: 1px solid rgba(0,0,0,.06);
+  gap: 8px;
+}
+
+/* Responsivo: 1 coluna em telas menores */
+@media (max-width: 900px) {
+  .col-6 { grid-column: span 12; }
 }

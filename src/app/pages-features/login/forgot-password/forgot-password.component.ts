@@ -23,6 +23,7 @@ import {ResetPasswordComponent} from '../reset-password/reset-password.component
     MatProgressBar
   ],
   templateUrl: './forgot-password.component.html',
+  standalone: true,
   styleUrl: './forgot-password.component.scss'
 })
 export class ForgotPasswordComponent {

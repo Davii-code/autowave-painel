@@ -1,0 +1,51 @@
+/* src/app/client/ui/client.component.css */
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.list-header h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.list-header .right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.list-header .search {
+  width: min(360px, 60vw);
+}
+
+.table-wrapper {
+  background: var(--mat-sys-surface, #fff);
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table-wrapper table {
+  width: 100%;
+}
+
+.table-wrapper .chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 20px;
+  background: rgba(0,0,0,.08);
+}
+
+.table-wrapper .chip.on  { background: rgba(16,185,129,.15); color: #065f46; }
+.table-wrapper .chip.off { background: rgba(239,68,68,.15); color: #7f1d1d; }
+
+mat-paginator {
+  border-top: 1px solid rgba(0,0,0,.06);
+}

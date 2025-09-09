@@ -1,9 +1,7 @@
-import { Injectable } from '@angular/core';
+import {Injectable, signal} from '@angular/core';
 import {MatDrawer} from '@angular/material/sidenav';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class DrawerService {
 
   constructor() { }

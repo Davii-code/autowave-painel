@@ -1,57 +1,66 @@
-<!-- src/app/client/ui/client-create.component.html -->
-<mat-card class="card">
-  <div class="card-header">
-    <div class="title">
-      <mat-icon>person_add</mat-icon>
-      <h2>Novo Cliente</h2>
-    </div>
-    <div class="actions">
-      <button mat-stroked-button color="primary" (click)="cancel()">
-        <mat-icon>arrow_back</mat-icon>
-        Voltar
-      </button>
-    </div>
-  </div>
+<!-- src/app/client/ui/client-create.dialog.html -->
+<h2 mat-dialog-title class="dialog-title">
+  <span class="title">
+    <mat-icon>person_add</mat-icon>
+    Novo Cliente
+  </span>
+  <button mat-icon-button mat-dialog-close aria-label="Fechar">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
 
-  <mat-progress-bar *ngIf="saving()" mode="indeterminate"></mat-progress-bar>
+<mat-progress-bar *ngIf="saving()" mode="indeterminate"></mat-progress-bar>
 
-  <form class="form" (ngSubmit)="submit()" [formGroup]="form" autocomplete="off" novalidate>
+<mat-dialog-content class="content">
+  <form id="clientCreateForm" class="form" (ngSubmit)="submit()" [formGroup]="form" autocomplete="off" novalidate>
     <div class="grid">
-      <mat-form-field appearance="outline">
+      <!-- Nome -->
+      <mat-form-field appearance="outline" class="col-6">
         <mat-label>Nome</mat-label>
-        <input matInput formControlName="name" placeholder="Ex.: Maria Silva" />
+        <input matInput formControlName="name" cdkFocusInitial placeholder="Ex.: Maria Silva" />
         <mat-error *ngIf="hasError('name','required')">Nome é obrigatório.</mat-error>
         <mat-error *ngIf="hasError('name','minlength')">Mínimo de 2 caracteres.</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" type="email" placeholder="email@dominio.com" />
-        <mat-error *ngIf="hasError('email','required')">Email é obrigatório.</mat-error>
-        <mat-error *ngIf="hasError('email','email')">Formato de email inválido.</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
+      <!-- Telefone -->
+      <mat-form-field appearance="outline" class="col-6">
         <mat-label>Telefone</mat-label>
-        <input matInput formControlName="phone" placeholder="(11) 90000-0000" />
+        <input
+          matInput
+          formControlName="telephone"
+          inputmode="numeric"
+          autocomplete="tel"
+          maxlength="11"
+          (input)="digitsOnly('telephone')"
+          placeholder="Ex.: 62998765432" />
+        <mat-error *ngIf="hasError('telephone','required')">Telefone é obrigatório.</mat-error>
+        <mat-error *ngIf="hasError('telephone','pattern')">Formato de telefone inválido.</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Documento</mat-label>
-        <input matInput formControlName="document" placeholder="CPF/CNPJ" />
+      <!-- Data de Nascimento -->
+      <mat-form-field appearance="outline" class="col-6">
+        <mat-label>Data de nascimento</mat-label>
+        <input matInput type="date" formControlName="dateofbirth" />
+        <mat-error *ngIf="hasError('dateofbirth','required')">Data de nascimento é obrigatória.</mat-error>
       </mat-form-field>
 
-      <div class="toggle">
-        <mat-slide-toggle color="primary" formControlName="active">Ativo</mat-slide-toggle>
-      </div>
-    </div>
-
-    <div class="footer">
-      <button type="button" mat-button (click)="cancel()">Cancelar</button>
-      <button type="submit" mat-flat-button color="primary" [disabled]="form.invalid || saving()">
-        <mat-icon>check</mat-icon>
-        Salvar
-      </button>
+      <!-- Última Compra (opcional) -->
+      <mat-form-field appearance="outline" class="col-6">
+        <mat-label>Última compra</mat-label>
+        <input matInput type="date" formControlName="lastPurchase" />
+        <mat-error *ngIf="hasError('lastPurchase','required')">Data da última venda  é obrigatória.</mat-error>
+      </mat-form-field>
     </div>
   </form>
-</mat-card>
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end" class="footer">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-flat-button color="primary"
+          [disabled]="form.invalid || saving()"
+          form="clientCreateForm">
+    <mat-icon>check</mat-icon>
+    Salvar
+  </button>
+</mat-dialog-actions>

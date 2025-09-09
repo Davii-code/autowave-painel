@@ -1,11 +1,6 @@
-export interface Client {
+export interface UserSecond {
   id?: number;
-  name: string;
-  telephone?: string;
-  dateofbirth?: string;     // LocalDate -> enviar como 'YYYY-MM-DD'
-  lastPurchase?: string;
-  user?: any;
-
+  name?: string;
+  login?: string;
 }
 
-export type SortData = { sortParam: string; sortDirection: 'asc' | 'desc' };

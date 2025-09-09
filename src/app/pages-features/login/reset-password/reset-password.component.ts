@@ -21,6 +21,7 @@ import {MatButton} from '@angular/material/button';
     MatButton
   ],
   templateUrl: './reset-password.component.html',
+  standalone: true,
   styleUrl: './reset-password.component.scss'
 })
 export class ResetPasswordComponent {

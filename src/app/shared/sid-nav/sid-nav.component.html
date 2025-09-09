@@ -1,1 +1,21 @@
-<p>sid-nav works!</p>
+<div class="sidenav-header">
+  <img [width]="profilePicSize()" [height]="profilePicSize()" src="assets/logo_cam.png" alt="">
+  <div class="header-text" [class.hide-header-text]="sidenavCollapsed()">
+    <h2>Auto Wave</h2>
+  </div>
+</div>
+<mat-nav-list>
+  <a mat-list-item routerLink='/client' routerLinkActive="active-link" #rlaDashboard="routerLinkActive"  >
+    <mat-icon matListItemIcon>person</mat-icon>
+    <span>Cliente</span>
+  </a>
+
+  <a mat-list-item routerLink='/dispatch' routerLinkActive="active-link" #rlaDashboard="routerLinkActive">
+    <mat-icon matListItemIcon>share</mat-icon>
+    <span>Dispachar</span>
+  </a>
+  <a mat-list-item routerLink='/campaing' routerLinkActive="active-link" #rlaDashboard="routerLinkActive">
+    <mat-icon matListItemIcon>whatshot</mat-icon>
+    <span>Campanha</span>
+  </a>
+</mat-nav-list>
