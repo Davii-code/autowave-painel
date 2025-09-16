@@ -27,4 +27,8 @@ export class MensageiroService {
   sendMessage(dto: any): Observable<any> {
     return this._http.post<any>(`${this.apiUrl}/sendMessage`, dto);
   }
+
+  createInstance(dto: any): Observable<any> {
+    return this._http.post<any>(`${this.apiUrl}/instance/create`, dto);
+  }
 }

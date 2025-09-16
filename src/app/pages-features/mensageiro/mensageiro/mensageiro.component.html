@@ -1,15 +1,25 @@
 <div class="container">
   <mat-card class="card" appearance="outlined">
     <div class="title-text">
-      <p>{{ getTittleCard() }}</p>
+      <p>{{ getTitleCard() }}</p>
     </div>
 
     <div class="icon">
-      <img mat-card-image [src]="getImage()" width="200" height="200" alt="">
+      <img mat-card-image [src]="getImage()" width="200" height="200" alt="Status do mensageiro">
     </div>
 
     <mat-card-content class="container-button">
-      <button mat-button mat-flat-button class="big-button" [ngStyle]="getButtonStyle()" (click)="handleButtonClick()" [disabled]="!haveInstance">{{ getButtonLabel() }}</button>
+      <button
+        mat-button
+        mat-flat-button
+        class="big-button"
+        [ngStyle]="getButtonStyle()"
+        (click)="handleButtonClick()"
+        [disabled]="!haveInstance"
+        [attr.aria-label]="getButtonLabel()"
+      >
+        {{ getButtonLabel() }}
+      </button>
     </mat-card-content>
   </mat-card>
 
@@ -27,20 +37,41 @@
           <mat-icon>format_italic</mat-icon>
         </button>
       </mat-toolbar>
-      <textarea matInput id="editor" [(ngModel)]="text" rows="5" placeholder="Digite seu texto aqui..." class="editor-input" [disabled]="!(haveInstance && status === 'open')"></textarea>
-    </div>
 
-    <mat-card-content class="container-button"></mat-card-content>
+      <textarea
+        matInput
+        id="editor"
+        [(ngModel)]="text"
+        rows="5"
+        placeholder="Digite seu texto aqui..."
+        class="editor-input"
+        [disabled]="!(haveInstance && status === 'open')"
+      ></textarea>
+    </div>
   </mat-card>
 
   <mat-card class="card" appearance="outlined">
     <mat-card-title class="title-text">
       <p>Selecione os clientes para enviar mensagem</p>
     </mat-card-title>
-    <app-paciente-select class="select-pacient" (selectedPacientesChange)="onSelectedPacientesChange($event)" [disabled]="!(haveInstance && status === 'open')"></app-paciente-select>
+
+    <app-client-select
+      class="select-client"
+      (selectedClientsChange)="onSelectedClientsChange($event)"
+      [disabled]="!(haveInstance && status === 'open')"
+    ></app-client-select>
+
     <mat-card-content class="container-button">
       <div class="container-button-end">
-        <button mat-button mat-flat-button class="medium-button" (click)="enviar()" [disabled]="!(haveInstance && status === 'open')"> Enviar </button>
+        <button
+          mat-button
+          mat-flat-button
+          class="medium-button"
+          (click)="enviar()"
+          [disabled]="!canSend"
+        >
+          Enviar
+        </button>
       </div>
     </mat-card-content>
   </mat-card>

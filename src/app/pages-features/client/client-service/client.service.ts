@@ -17,7 +17,7 @@ export class ClientService extends AbstractService<Client> {
     filtro: any,
     pageNumber: number,
     pageSize: number,
-    sortData?: SortData
+    sortData?: any
   ): Observable<{ content: Client[]; total: number }> {
     return super.listar(filtro, pageNumber, pageSize, sortData as any).pipe(
       map((res: any) => {

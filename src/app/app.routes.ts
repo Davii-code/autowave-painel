@@ -4,6 +4,7 @@ import {LoginFormComponent} from './pages-features/login/login-form/login-form.c
 import {ClientComponent} from './pages-features/client/client.component';
 import {DispatchComponent} from './pages-features/dispatch/dispatch.component';
 import {CampaingComponent} from './pages-features/campaing/campaing.component';
+import {MensageiroComponent} from './pages-features/mensageiro/mensageiro/mensageiro.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -12,4 +13,5 @@ export const routes: Routes = [
   {path: 'client', component: ClientComponent},
   {path: 'dispatch', component: DispatchComponent},
   {path: 'campaing', component: CampaingComponent},
+  {path: 'mensagem', component: MensageiroComponent}
 ];

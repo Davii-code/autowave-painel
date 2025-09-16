@@ -5,69 +5,84 @@ import {NgStyle} from '@angular/common';
 import {MatToolbar} from '@angular/material/toolbar';
 import {MatIcon} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
-import {PacienteSelectComponent} from '../../paciente/paciente-select/paciente-select.component';
 import {MensageiroService} from '../mensageiro.service';
 import {MatInput} from '@angular/material/input';
 import {MatTooltip} from '@angular/material/tooltip';
+import {ClientSelectComponent} from '../../client/client-select/client-select.component';
 
 @Component({
   selector: 'app-mensageiro-status',
-  imports: [MatCardModule, MatButtonModule, NgStyle, MatToolbar, MatIcon, FormsModule, PacienteSelectComponent, MatInput, MatTooltip],
+  imports: [MatCardModule, MatButtonModule, NgStyle, MatToolbar, MatIcon, FormsModule, MatInput, MatTooltip, ClientSelectComponent],
   templateUrl: './mensageiro.component.html',
-  styleUrl: './mensageiro.component.scss',
+  styleUrl: './mensageiro.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true
 })
 export class MensageiroComponent {
-  haveInstance: boolean = false;
+  haveInstance = false;
+  /** 'connecting' | 'open' | 'close' */
   status: string = '';
   qrCodeBase64: string = '';
 
-  text: string = '';
-  selectedPacientes: any[] = [];
+  text = '';
+  selectedClients: any[] = [];
 
-  constructor(public service: MensageiroService,
-              private changeDetectorRef: ChangeDetectorRef) {
+  /** Pode enviar se tiver conectado, houver texto e houver clientes selecionados */
+  get canSend() {
+    return this.haveInstance && this.status === 'open' && !!this.text.trim() && this.selectedClients.length > 0;
+  }
+
+  constructor(public service: MensageiroService, private cdr: ChangeDetectorRef) {
     this.getStatus();
   }
 
-  getTittleCard(): string {
-    const labels: { [key: string]: string } = {
+  // Mantém o nome antigo como alias para não quebrar o HTML antigo (se existir)
+  getTittleCard(): string { return this.getTitleCard(); }
+
+  getTitleCard(): string {
+    const labels: Record<string, string> = {
       connecting: 'Escaneie o QR Code para conectar o WhatsApp com nosso sistema',
       open: 'Mensageiro conectado e funcionando',
       close: 'Mensageiro desconectado'
     };
-    return labels[this.status] || labels['close'];
+    return labels[this.status] ?? labels['close'];
   }
 
   getImage(): string {
-    const images: { [key: string]: string } = {
-      connecting: this.qrCodeBase64,
+    if (this.status === 'connecting' && this.qrCodeBase64) {
+      // Garante prefixo data URL
+      return this.qrCodeBase64.startsWith('data:')
+        ? this.qrCodeBase64
+        : `data:image/png;base64,${this.qrCodeBase64}`;
+    }
+    const images: Record<string, string> = {
       open: 'assets/circle-check-solid.svg',
-      close: 'assets/circle-xmark-solid.svg'
+      close: 'assets/circle-xmark-solid.svg',
+      connecting: 'assets/qrcode-placeholder.svg' // fallback enquanto não vem o base64
     };
-    return images[this.status] || images['close'];
+    return images[this.status] ?? images['close'];
   }
 
   getButtonLabel(): string {
-    const labels: { [key: string]: string } = {
+    const labels: Record<string, string> = {
       connecting: 'Atualizar',
       open: 'Desconectar',
       close: 'Conectar'
     };
-    return labels[this.status] || labels['close'];
+    return labels[this.status] ?? labels['close'];
   }
 
-  getButtonStyle(): { [key: string]: string } {
-    const styles: { [key: string]: any } = {
+  getButtonStyle(): Record<string, string> {
+    const styles: Record<string, Record<string, string>> = {
       connecting: { 'background-color': 'var(--azul-claro)' },
       open: { 'background-color': 'var(--vermelho)' },
       close: { 'background-color': 'var(--verde)' }
     };
-    return styles[this.status] || styles['close'];
+    return styles[this.status] ?? styles['close'];
   }
 
   handleButtonClick(): void {
-    const actions: { [key: string]: () => void } = {
+    const actions: Record<string, () => void> = {
       connecting: () => this.atualizar(),
       open: () => this.desconectar(),
       close: () => this.conectar()
@@ -77,76 +92,88 @@ export class MensageiroComponent {
 
   getStatus() {
     this.service.status().subscribe({
-      next: response => {
-        this.haveInstance = true
-        this.status = response.status
-        console.log(this.status)
-        this.changeDetectorRef.detectChanges()
+      next: (response) => {
+        this.haveInstance = true;
+        this.status = response.status;
+        // Se estiver pedindo conexão, pode vir QR em status()
+        if (response.base64) this.qrCodeBase64 = response.base64;
+        this.cdr.detectChanges();
       },
-      error: err => {
-        this.haveInstance = false
-        this.changeDetectorRef.detectChanges();
+      error: () => {
+        this.haveInstance = false;
+        this.status = 'close';
+        this.cdr.detectChanges();
       }
-    })
+    });
   }
 
   conectar() {
     this.service.connect().subscribe({
-      next: response => {
-        console.log(response)
-        this.qrCodeBase64 = response.base64;
+      next: (response) => {
+        this.qrCodeBase64 = response.base64 || '';
         this.status = 'connecting';
-        this.changeDetectorRef.detectChanges()
+        this.cdr.detectChanges();
       }
-    })
+    });
   }
 
   desconectar() {
     this.service.logout().subscribe({
-      next: () => {
-        this.getStatus();
-      }
-    })
+      next: () => this.getStatus()
+    });
   }
 
-  atualizar() {
-    this.getStatus();
-  }
+  atualizar() { this.getStatus(); }
 
   enviar() {
-    let dto = { patients: this.selectedPacientes, message: this.text }
-    console.log(dto)
-    this.service.sendMessage(dto).subscribe({
-      next: response => {
-        console.log(response)
-      },
-      error: err => {
-        console.log(err)
-      }
-    })  }
+    // Regras simples de segurança/UX
+    const message = this.text.trim();
+    if (!message) return;
+    if (message.length > 4096) { // ajuste se sua API permitir outro tamanho
+      alert('Mensagem muito longa. Reduza o texto para até 4096 caracteres.');
+      return;
+    }
+    if (this.selectedClients.length === 0) {
+      alert('Selecione ao menos um cliente.');
+      return;
+    }
 
-  formatText(format: string) {
-    const textarea = document.getElementById('editor') as HTMLTextAreaElement;
-    const { selectionStart: start, selectionEnd: end } = textarea;
+    const dto = { clients: this.selectedClients, message };
+    this.service.sendMessage(dto).subscribe({
+      next: (response) => {
+        // feedback básico; ideal: snackbar
+        console.log(response);
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  formatText(format: 'bold' | 'italic') {
+    const textarea = document.getElementById('editor') as HTMLTextAreaElement | null;
+    if (!textarea) return;
+    const start = textarea.selectionStart ?? 0;
+    const end = textarea.selectionEnd ?? 0;
     const selectedText = this.text.substring(start, end);
 
     const formats: Record<string, [string, string]> = {
       bold: ['*', '*'],
-      italic: ['_', '_'],
+      italic: ['_', '_']
     };
+    const wrapper = formats[format];
+    if (!wrapper) return;
 
-    if (formats[format]) {
-      const [before, after] = formats[format];
-      this.text = this.text.substring(0, start) + before + selectedText + after + this.text.substring(end);
-    }
+    const [before, after] = wrapper;
+    this.text = this.text.substring(0, start) + before + selectedText + after + this.text.substring(end);
 
+    // Reposiciona o cursor
     setTimeout(() => {
       textarea.focus();
-      textarea.setSelectionRange(start + (formats[format]?.[0]?.length || 0), start + (formats[format]?.[0]?.length || 0) + selectedText.length);
+      const caretStart = start + before.length;
+      textarea.setSelectionRange(caretStart, caretStart + selectedText.length);
     });
   }
 
-  onSelectedPacientesChange(selected: any[]) {
-    this.selectedPacientes = selected;
+  onSelectedClientsChange(selected: any[]) {
+    this.selectedClients = selected ?? [];
   }
 }

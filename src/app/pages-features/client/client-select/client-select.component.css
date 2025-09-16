@@ -1,0 +1,12 @@
+.custom-table {
+  width: 100%;
+}
+
+.check-column {
+  width: 10%;
+  min-width: 50px; /* Evita que fique muito pequeno */
+}
+
+.name-column {
+  width: 90%;
+}

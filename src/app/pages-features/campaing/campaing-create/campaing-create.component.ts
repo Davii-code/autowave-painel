@@ -48,10 +48,7 @@ export class CampaingCreateComponent {
 
   form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
-    scheduledDate: ['', [
-      Validators.required,
-      Validators.pattern(/^\d{10,11}$/) // só números, 10 ou 11 dígitos
-    ]],
+      scheduledDate: ['', [Validators.required]],
     type: ['', [Validators.required]],
     messageTemplate: ['', [Validators.required]],
     user: this.fb.nonNullable.control<UserSecond>({
@@ -82,11 +79,13 @@ export class CampaingCreateComponent {
 
     const payload: Campaing = {
       name: raw.name.trim(),
-      scheduledDate: (raw.scheduledDate || '').replace(/\D/g, ''), // só dígitos
+      scheduledDate: raw.scheduledDate , // só dígitos
       type: raw.type,
       messageTemplate: raw.messageTemplate ?raw.messageTemplate : undefined,
       user: raw.user
     };
+
+    console.log("Campanha: ", payload)
 
     this.service.create(payload).subscribe({
       next: (created) => {

@@ -1,1 +1,60 @@
-<p>campaing-dialog-edit works!</p>
+<h2 mat-dialog-title class="dialog-title">
+  <span class="title">
+    <mat-icon>edit</mat-icon>
+    Editar Campanha
+  </span>
+  <button mat-icon-button (click)="close()" aria-label="Fechar">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+
+<mat-progress-bar *ngIf="loading() || saving()" mode="indeterminate"></mat-progress-bar>
+
+<mat-dialog-content class="content">
+  <form id="campaingEditForm" class="form" (ngSubmit)="submit()" [formGroup]="form" autocomplete="off" novalidate>
+    <div class="grid">
+      <!-- Nome -->
+      <mat-form-field appearance="outline" class="col-6">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name" cdkFocusInitial placeholder="Ex.: Campanha de Setembro" />
+        <mat-error *ngIf="hasError('name','required')">Nome é obrigatório.</mat-error>
+        <mat-error *ngIf="hasError('name','minlength')">Mínimo de 2 caracteres.</mat-error>
+      </mat-form-field>
+
+      <!-- Data de envio -->
+      <mat-form-field appearance="outline" class="col-6">
+        <mat-label>Data de envio</mat-label>
+        <input matInput type="date" formControlName="scheduledDate" />
+        <mat-error *ngIf="hasError('scheduledDate','required')">Data de envio é obrigatória.</mat-error>
+      </mat-form-field>
+
+      <!-- Tipo -->
+      <mat-form-field appearance="outline" class="col-6">
+        <mat-label>Tipo</mat-label>
+        <mat-select formControlName="type" required>
+          <mat-option value="BIRTHDAY">Aniversário</mat-option>
+          <mat-option value="INACTIVE">Inativos</mat-option>
+          <mat-option value="POST_SALE">Pós-venda</mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasError('type','required')">Tipo é obrigatório.</mat-error>
+      </mat-form-field>
+
+      <!-- Template da mensagem -->
+      <mat-form-field appearance="outline" class="col-12">
+        <mat-label>Template da mensagem</mat-label>
+        <textarea matInput rows="4" formControlName="messageTemplate" placeholder="Texto que será enviado..."></textarea>
+        <mat-error *ngIf="hasError('messageTemplate','required')">Template é obrigatório.</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="footer">
+  <button mat-button (click)="close()">Cancelar</button>
+  <button mat-flat-button color="primary"
+          [disabled]="form.invalid || saving() || loading() || !form.dirty"
+          form="campaingEditForm">
+    <mat-icon>save</mat-icon>
+    Salvar alterações
+  </button>
+</mat-dialog-actions>
